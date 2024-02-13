@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alita_qa"
+version = "0.0.1"
+authors = [
+  { name="Artem Rozumenko", email="artem_rozumenko@epam.com" },
+]
+description = "LLM Agents for solving routine QA Tasks"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.urls]
+Homepage = "https://projectalita.ai"
+Issues = "https://github.com/ProjectAlita/virtualQA/issues"
