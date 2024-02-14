@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Petclinic Visits API
+  version: 1.0.0
+servers:
+  - url: https://petclinic.example.com
+paths:
+  /owners/*/pets/{petId}/visits/new:
+    get:
+      summary: Initiate the form for a new visit for a pet
+      operationId: initNewVisitForm
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show new visit form
+    post:
+      summary: Process the form submission for a new visit for a pet
+      operationId: processNewVisitForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '302':
+          description: Redirect to the owner's details page upon successful visit creation
+  /owners/*/pets/{petId}/visits:
+    get:
+      summary: Show all visits for a pet
+      operationId: showVisits
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show visits list for a pet
+components:
+  schemas:
+    Visit:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        pet:
+          $ref: '#/components/schemas/Pet'
+      required:
+        - date
+        - description

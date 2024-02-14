@@ -17,7 +17,7 @@ import requests
 from typing import Any
 from analysta_llm_agents.tools.tool import tool
 import logging
-from config import result_path
+from ...config import result_path
 
 logger = logging.getLogger(__name__)
 

@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  title: Petclinic Owners API
+  version: 1.0.0
+servers:
+  - url: https://petclinic.example.com
+paths:
+  /owners/new:
+    get:
+      summary: Initiate the form to create a new owner
+      operationId: initCreationForm
+      responses:
+        '200':
+          description: Show owner creation form
+    post:
+      summary: Process the form submission for creating a new owner
+      operationId: processCreationForm
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Owner'
+      responses:
+        '302':
+          description: Redirect to the owner's details page upon successful creation
+  /owners/find:
+    get:
+      summary: Initiate the form to find owners by last name
+      operationId: initFindForm
+      responses:
+        '200':
+          description: Show owner find form
+  /owners:
+    get:
+      summary: Process the search for owners by last name
+      operationId: processFindForm
+      parameters:
+        - name: lastName
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Show list of owners or redirect to the single owner's details
+  /owners/{ownerId}/edit:
+    get:
+      summary: Initiate the form to update an owner
+      operationId: initUpdateOwnerForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show owner update form
+    post:
+      summary: Process the form submission for updating an owner
+      operationId: processUpdateOwnerForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Owner'
+      responses:
+        '302':
+          description: Redirect to the owner's details page upon successful update
+  /owners/{ownerId}:
+    get:
+      summary: Display an owner's details
+      operationId: showOwner
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show owner's details page
+components:
+  schemas:
+    Owner:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        telephone:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - address
+        - city
+        - telephone

@@ -18,7 +18,8 @@ from os import environ
 # load_dotenv('.env')
 
 langsmith_api_key = environ.get('LANGSMITH_API_KEY')
-result_path = environ.get('RESULT_PATH', 'results')
+result_path = environ.get('RESULT_PATH', 'swaggers')
+gherkin_path = environ.get('GHERKIN_PATH', 'gherkins')
 ai_model='AzureChatOpenAI'
 ai_model_params={
     "model_name": environ.get("MODEL_NAME", ""),

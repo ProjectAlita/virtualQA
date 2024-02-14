@@ -12,27 +12,26 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from .api_spec_agent.agent import RepoToSwagger
-from analysta_llm_agents.tools.context import Context
-
 import logging
+
+from .test_cases_from_swagger.agent import SwaggerToGherkin
+from analysta_llm_agents.tools.context import Context
+from os import environ
 
 logging.basicConfig(level=logging.ERROR)
 
-ctx = Context()
-ctx.shared_memory = []
-ctx.input_tokens = 0
-ctx.output_tokens = 0
-agent = RepoToSwagger(ctx)
+def swag2gherkin():
+    ctx = Context()
+    ctx.shared_memory = []
+    ctx.input_tokens = 0
+    ctx.output_tokens = 0
+    agent = SwaggerToGherkin(ctx)
+    task = f"""Use repository '{environ.get("RESULT_PATH", "swaggers")}'"""
+    print(f"\n\nTask: {task}\n\n")
+    for message in agent.start(task):
+        print(message)
+        print("\n\n")
 
-task = """Use repository spring-petclinic/spring-framework-petclinic with 
-branch main It is Java Spring application, please create swagger spec. 
-Deployment URL is https://petclinic.example.com """
-
-print(f"\n\nTask: {task}\n\n")
-for message in agent.start(task):
-    print(message)
-    print("\n\n")
-
-print(f"Input tokens: {ctx.input_tokens}")
-print(f"Output tokens: {ctx.input_tokens}")
+    print(f"Input tokens: {ctx.input_tokens}")
+    print(f"Output tokens: {ctx.output_tokens}")
+    

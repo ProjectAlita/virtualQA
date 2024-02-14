@@ -14,7 +14,7 @@
 
 
 from analysta_llm_agents import ReactAgent
-from config import ai_model, ai_model_params
+from ...config import ai_model, ai_model_params
 from .actions import __all__ as actions
 
 agent_prompt = """You are autonomosus bot tasked to create yaml file following openapi v3 spec from repository provided to you. 
