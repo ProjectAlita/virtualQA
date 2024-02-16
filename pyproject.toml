@@ -24,6 +24,7 @@ dependencies = {file = ["requirements.txt"]}
 [project.scripts]
 git2swagger = "alita_qa.agents.git2swag:git2swagger"
 swagger2gherkin = "alita_qa.agents.swag2gherkin:swag2gherkin"
+gherkin2testss = "alita_qa.agents.create_and_run_tests:gherkin2tests"
 
 [project.urls]
 Homepage = "https://projectalita.ai"

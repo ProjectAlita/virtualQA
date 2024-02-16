@@ -1,0 +1,4 @@
+requests
+pytest 
+pytest-reportportal
+pytest-html 
