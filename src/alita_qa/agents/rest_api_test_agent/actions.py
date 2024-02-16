@@ -73,7 +73,8 @@ def runTests(ctx: Any, folder_with_tests: str):
         folder_with_tests,
         "--verbose",
         "--html=pytest_report.html",
-        "--junitxml=out_report.xml"
+        "--junitxml=out_report.xml",
+        "--reportportal"
     ])
     return f"Exit code of tests execution {exit_code} Results are stored in 'pytest_report.html' and 'out_report.xml'"
     

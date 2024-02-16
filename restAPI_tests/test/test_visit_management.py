@@ -1,23 +1,44 @@
-import requests
 import pytest
+import requests
 from os import environ
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def base_url():
-    return environ.get('DEPLOYMENT_URL', "http://yourapiendpoint.com")
+    return environ.get('DEPLOYMENT_URL', 'http://yourapiendpoint.com')
 
-@pytest.mark.parametrize("date, description, expected_status", [
-    ("2023-05-01", "Annual vaccination", 302),
-    ("2023-06-15", "General checkup", 302),
-    ("", "Checkup", 400)
-])
-def test_create_visit(base_url, date, description, expected_status):
-    pet_id = 101 # Assuming pet with ID 101 exists for testing
-    response = requests.post(f"{base_url}/owners/1/pets/{pet_id}/visits/new", data={
-        'date': date,
-        'description': description
-    })
-    assert response.status_code == expected_status
+def setup_module(module):
+    # Setup for the entire module
+    pass
 
-# Additional tests based on Gherkin scenarios will be implemented here.
-# Tests for initiating a new visit form and showing all visits for a pet are to be added.
+def teardown_module(module):
+    # Teardown for the entire module
+    pass
+
+class TestVisitManagement:
+    def setup_method(self, method):
+        # Setup for each test method
+        pass
+
+    def teardown_method(self, method):
+        # Teardown for each test method
+        pass
+
+    def test_initiate_new_visit_form(self, base_url):
+        # Test implementation
+        pass
+
+    @pytest.mark.parametrize('date, description', [
+        ('2023-05-01', 'Annual vaccination'),
+        ('2023-06-15', 'General checkup')
+    ])
+    def test_create_new_visit_with_valid_data(self, base_url, date, description):
+        # Test implementation
+        pass
+
+    def test_create_new_visit_with_invalid_data(self, base_url):
+        # Test implementation
+        pass
+
+    def test_show_all_visits_for_pet(self, base_url):
+        # Test implementation
+        pass

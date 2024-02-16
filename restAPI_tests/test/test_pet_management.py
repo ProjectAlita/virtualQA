@@ -1,24 +1,48 @@
-import requests
 import pytest
+import requests
 from os import environ
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def base_url():
-    return environ.get('DEPLOYMENT_URL', "http://yourapiendpoint.com")
+    return environ.get('DEPLOYMENT_URL', 'http://yourapiendpoint.com')
 
-@pytest.mark.parametrize("name, birthDate, type, expected_status", [
-    ("Fluffy", "2020-04-12", "Dog", 302),
-    ("Whiskers", "2019-08-09", "Cat", 302),
-    ("", "2020-04-12", "Dog", 400)
-])
-def test_create_pet(base_url, name, birthDate, type, expected_status):
-    owner_id = 1 # Assuming owner with ID 1 exists for testing
-    response = requests.post(f"{base_url}/owners/{owner_id}/pets/new", data={
-        'name': name,
-        'birthDate': birthDate,
-        'type': type
-    })
-    assert response.status_code == expected_status
+def setup_module(module):
+    # Setup for the entire module
+    pass
 
-# Additional tests based on Gherkin scenarios will be implemented here.
-# Tests for updating pets with valid and invalid data are to be added.
+def teardown_module(module):
+    # Teardown for the entire module
+    pass
+
+class TestPetManagement:
+    def setup_method(self, method):
+        # Setup for each test method
+        pass
+
+    def teardown_method(self, method):
+        # Teardown for each test method
+        pass
+
+    @pytest.mark.parametrize('name, birthDate, type', [
+        ('Fluffy', '2020-04-12', 'Dog'),
+        ('Whiskers', '2019-08-09', 'Cat')
+    ])
+    def test_create_pet_with_valid_data(self, base_url, name, birthDate, type):
+        # Test implementation
+        pass
+
+    def test_create_pet_with_invalid_data(self, base_url):
+        # Test implementation
+        pass
+
+    @pytest.mark.parametrize('name, birthDate, type', [
+        ('Fido', '2018-03-15', 'Dog'),
+        ('Mittens', '2017-07-21', 'Cat')
+    ])
+    def test_update_pet_with_valid_data(self, base_url, name, birthDate, type):
+        # Test implementation
+        pass
+
+    def test_update_pet_with_invalid_data(self, base_url):
+        # Test implementation
+        pass

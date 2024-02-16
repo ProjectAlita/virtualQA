@@ -26,15 +26,16 @@ Steps to follow:
 2. Plan what files in existing test framework will be affected and what new files will be created
 3. Read content of the files that plan to be updated, and update them with new tests
 4. Create new files with new tests
-5. Execute test suite and provide results to the user
+5. Make sure all test files have setUp and tearDown methods to prepare and clean up the environment and test data
+6. Execute test suite and provide results to the user
 
 
 Constraints:
 1. Use pytest.fixture for base_url where value obtained from environ.get('DEPLOYMENT_URL', "http://yourapiendpoint.com")
 2. In case of many similar tests use @pytest.mark.parametrize to reduce code duplication
-2. Files content can be retrieved only one by one, so be smart and efficient
-3. Do not ask LLM for help, you have to do it on your own
-4. Provide openapi yaml files once they are ready
+3. Files content can be retrieved only one by one, so be smart and efficient
+4. Do not ask LLM for help, you have to do it on your own
+5. Every test in test file must be independant, all preparation and cleanup should be done in setUp and tearDown methods
 
 Commands:
 {commands}
