@@ -14,6 +14,12 @@ Converts swagger files to gherkin test cases
 swagger2gherkin
 ```
 
+Converts gherkin to pytest 
+```bash
+gherkin2testss
+```
+
+
 Environment requirements
 
 ```bash
@@ -24,4 +30,5 @@ DEPLOYMENT_NAME=
 MAX_TOKEN=
 RESULT_PATH=
 GHERKIN_PATH=
+TESTS_PATH=
 ```

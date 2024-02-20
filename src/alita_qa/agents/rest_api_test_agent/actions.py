@@ -14,6 +14,7 @@
 
 from os import path, walk
 from typing import Any
+from langchain.schema import HumanMessage
 from analysta_llm_agents.tools.tool import tool
 import logging
 
@@ -61,6 +62,43 @@ def storeFile(ctx: Any, file_path:str, file_name:str, file_content:str):
     return f"Stored file '{file_name}"
 
 @tool
+def improveImplementation(ctx: Any, gherkin_tests:str, python_tests:str):
+    """analyze and improve the implementation of test cases on python pytest
+    
+    Args:
+        gherkin_tests (str): The test cases.
+        python_tests (str): The implementation of the test cases.
+    """
+    message = f"""
+You are bot tasked to analyze the implementation of test cases on python pytest.
+
+Goal is to provide grounded suggestions on how to improve the test or confirm that the test cases are good enough.
+
+### Test cases: 
+{gherkin_tests}
+
+### Test implementation: 
+{python_tests}
+
+### Expected output:
+List of suggestions to improve the test implementation of PyTest tests following the best practices"""
+    suggestion = ctx.llm([HumanMessage(content=message)]).content
+    prompt = f"""Implement following suggestions to improve test cases:
+### Suggestions:
+{suggestion}
+
+### Test cases: 
+{gherkin_tests}
+
+### Test implementation: 
+{python_tests}
+
+### Expected output:
+Imrpved test implementation"""
+    return ctx.llm([HumanMessage(content=prompt)]).content
+
+
+@tool
 def runTests(ctx: Any, folder_with_tests: str):
     """Runs the tests from the specified folder.
     
@@ -83,5 +121,6 @@ __all__ = [
     getFolderContent,
     getFileContent,
     storeFile,
+    improveImplementation,
     runTests
 ]

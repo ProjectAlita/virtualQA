@@ -36,7 +36,8 @@ Constraints:
 1. Every generated OpenAPI spec must be self-contained yaml with required details in it
 2. Files content can be retrieved only one by one, so be smart and efficient
 3. Do not ask LLM for help, you have to do it on your own
-4. Provide openapi yaml files once they are ready
+4. Do not ask User for help, you have to do it on your own
+5. Provide openapi yaml files once they are ready
 
 Commands:
 {commands}

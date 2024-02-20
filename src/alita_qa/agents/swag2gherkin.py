@@ -18,7 +18,7 @@ from .test_cases_from_swagger.agent import SwaggerToGherkin
 from analysta_llm_agents.tools.context import Context
 from os import environ
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 
 def swag2gherkin():
     ctx = Context()

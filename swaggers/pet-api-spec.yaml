@@ -1,14 +1,13 @@
 openapi: 3.0.0
 info:
-  title: Petclinic Pets API
-  version: 1.0.0
+  title: Petclinic Pet API
+  version: '1.0'
 servers:
-  - url: https://petclinic.example.com
+  - url: 'https://petclinic.example.com'
 paths:
   /owners/{ownerId}/pets/new:
     get:
-      summary: Initiate the form to create a new pet
-      operationId: initPetCreationForm
+      summary: Initiate creation of a new pet
       parameters:
         - name: ownerId
           in: path
@@ -17,10 +16,9 @@ paths:
             type: integer
       responses:
         '200':
-          description: Show pet creation form
+          description: Pet creation form
     post:
-      summary: Process the form submission for creating a new pet
-      operationId: processPetCreationForm
+      summary: Process creation of a new pet
       parameters:
         - name: ownerId
           in: path
@@ -30,16 +28,15 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: '#/components/schemas/Pet'
       responses:
         '302':
-          description: Redirect to the owner's details page upon successful pet creation
+          description: Redirect to the owner's page with the new pet
   /owners/{ownerId}/pets/{petId}/edit:
     get:
-      summary: Initiate the form to update a pet
-      operationId: initPetUpdateForm
+      summary: Initiate update of a pet
       parameters:
         - name: ownerId
           in: path
@@ -53,10 +50,9 @@ paths:
             type: integer
       responses:
         '200':
-          description: Show pet update form
+          description: Pet update form
     post:
-      summary: Process the form submission for updating a pet
-      operationId: processPetUpdateForm
+      summary: Process update of a pet
       parameters:
         - name: ownerId
           in: path
@@ -71,12 +67,12 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: '#/components/schemas/Pet'
       responses:
         '302':
-          description: Redirect to the owner's details page upon successful pet update
+          description: Redirect to the owner's page with the updated pet
 components:
   schemas:
     Pet:

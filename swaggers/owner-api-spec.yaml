@@ -1,40 +1,36 @@
 openapi: 3.0.0
 info:
-  title: Petclinic Owners API
-  version: 1.0.0
+  title: Petclinic Owner API
+  version: '1.0'
 servers:
-  - url: https://petclinic.example.com
+  - url: 'https://petclinic.example.com'
 paths:
   /owners/new:
     get:
-      summary: Initiate the form to create a new owner
-      operationId: initCreationForm
+      summary: Initiate creation of a new owner
       responses:
         '200':
-          description: Show owner creation form
+          description: Owner creation form
     post:
-      summary: Process the form submission for creating a new owner
-      operationId: processCreationForm
+      summary: Process creation of a new owner
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: '#/components/schemas/Owner'
       responses:
         '302':
-          description: Redirect to the owner's details page upon successful creation
+          description: Redirect to the created owner's page
   /owners/find:
     get:
-      summary: Initiate the form to find owners by last name
-      operationId: initFindForm
+      summary: Initiate owner search
       responses:
         '200':
-          description: Show owner find form
+          description: Owner search form
   /owners:
     get:
-      summary: Process the search for owners by last name
-      operationId: processFindForm
+      summary: Process find owner form
       parameters:
         - name: lastName
           in: query
@@ -43,11 +39,10 @@ paths:
             type: string
       responses:
         '200':
-          description: Show list of owners or redirect to the single owner's details
+          description: List of owners or redirect to single owner
   /owners/{ownerId}/edit:
     get:
-      summary: Initiate the form to update an owner
-      operationId: initUpdateOwnerForm
+      summary: Initiate update of an owner
       parameters:
         - name: ownerId
           in: path
@@ -56,10 +51,9 @@ paths:
             type: integer
       responses:
         '200':
-          description: Show owner update form
+          description: Owner update form
     post:
-      summary: Process the form submission for updating an owner
-      operationId: processUpdateOwnerForm
+      summary: Process update of an owner
       parameters:
         - name: ownerId
           in: path
@@ -69,16 +63,15 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: '#/components/schemas/Owner'
       responses:
         '302':
-          description: Redirect to the owner's details page upon successful update
+          description: Redirect to the updated owner's page
   /owners/{ownerId}:
     get:
-      summary: Display an owner's details
-      operationId: showOwner
+      summary: Show an owner
       parameters:
         - name: ownerId
           in: path
@@ -87,7 +80,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: Show owner's details page
+          description: Owner details
 components:
   schemas:
     Owner:

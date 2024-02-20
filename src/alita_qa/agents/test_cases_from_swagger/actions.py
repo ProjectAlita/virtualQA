@@ -15,6 +15,7 @@
 from os import path, walk
 from typing import Any
 from analysta_llm_agents.tools.tool import tool
+from langchain.schema import HumanMessage, AIMessage
 import logging
 from ...config import gherkin_path
 
@@ -60,9 +61,45 @@ def storeFeatureFile(ctx: Any, file_name:str, file_content:str):
         f.write(file_content)
     return f"Stored file '{file_name}"
 
+@tool
+def improveTestCoverate(ctx: Any, test_cases:str, api_spec:str):
+    """Analyzes the test quality and provide suggestions on improvements
+    
+    Args:
+        test_cases (str): The test cases.
+        api_spec (str): The API specification.
+    """
+    message = """
+You are bot tasked to analyze the test coverage and quality to provide suggestions on improvements for the test cases and the API specification.
+
+Goal is to provide grounded suggestions on how to improve the test coverage or confirm that the test cases are good enough.
+
+### API Specification: 
+{api_spec}
+
+### Test Cases: 
+{test_cases}
+
+### Expected Output:
+List of suggestions on how to improve the test coverage or confirmation that the test cases are good enough."""
+    suggestions = ctx.llm([HumanMessage(content=message)]).content
+    prompt = f"""Implement following suggestions to improve test cases:
+### Suggestions
+{suggestions}
+
+### API Specification: 
+{api_spec}
+
+### Test Cases: 
+{test_cases}
+
+### Expected Output:
+Updated Gherkin feature files with improved test coverage."""
+    return ctx.llm([HumanMessage(content=prompt)]).content
 
 __all__ = [
     getFolderContent,
     getFileContent,
-    storeFeatureFile
+    storeFeatureFile,
+    improveTestCoverate
 ]

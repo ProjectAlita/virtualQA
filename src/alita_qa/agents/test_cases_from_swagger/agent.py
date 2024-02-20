@@ -71,16 +71,19 @@ Feature: Owner Management
 4. Do you best shot in understanding the relationship between files and APIs they expose
 5. Use the knowledge about that relationships when creating Feature files
 6. Scenarios within feature files need to test different combinations of data, including negative
-7. Save openapi spec using storeFeatureFile command
-8. Complete task only after all files with endpoints are processed
+7. Analyze and Improve feature files using improveTestCoverate command
+8. Save openapi spec using storeFeatureFile command
+9. Complete task only after all files with endpoints are processed
 =========================
 
 Commands:
 {commands}
 
-=======CONSTTAINTS=======
+=======CONSRTAINTS=======
 1. You should assume that used do not know what is valid data and what is not, and must provide exact values for every field for REST API and for validation of response
-2. Test Automation can not act with uncertain boundaries, so make sure every test have exact test automation friendly checks
+3. Do not ask LLM for help, you have to do it on your own
+4. Do not ask User for help, you have to do it on your own
+5. Test Automation can not act with uncertain boundaries, so make sure every test have exact test automation friendly checks
 =========================
 
 
@@ -95,25 +98,10 @@ Respond only with JSON format as described below
 
 Ensure the response contains only JSON and it could be parsed by Python json.loads"""
 
-
-agent_response_format = """{
-    "thoughts": {
-        "text": "Text for user to explain what is going on and what are the next steps.",
-        "plan": "short bulleted, list that conveys long-term plan",
-        "criticism": "constructive self-criticism",
-    },
-    "command": {
-        "name": "command name",
-        "args": {
-            "arg name": "value"
-        }
-    }
-}"""
-
 class SwaggerToGherkin(ReactAgent):
     def __init__(self, ctx, **kwargs):
         super().__init__(agent_prompt=agent_prompt, actions=actions, model_type=ai_model, 
-                         model_params=ai_model_params, response_format=agent_response_format, ctx=ctx)
+                         model_params=ai_model_params, ctx=ctx)
     
     @property
     def __name__(self):
