@@ -1,2 +1,2 @@
-analysta_llm_agents==0.2.3
-python-dotenv==1.0.1
+analysta_llm_agents==0.2.8
+python-dotenv==1.0.0

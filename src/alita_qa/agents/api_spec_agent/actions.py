@@ -12,16 +12,18 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from os import path
+from os import path, makedirs
 import requests
 from typing import Any
-from analysta_llm_agents.tools.tool import tool
 import logging
 from ...config import result_path
 
 logger = logging.getLogger(__name__)
 
-@tool
+def create_path_if_not_exists(file_path):
+    if not path.exists(file_path):
+        makedirs(file_path)
+    
 def getRepoTree(ctx: Any, organization: str, repository: str, branch: str, recursive:str = 'true'):
     """This API is used to retrieve the tree structure of a repository on GitHub.
     
@@ -56,7 +58,6 @@ def getRepoTree(ctx: Any, organization: str, repository: str, branch: str, recur
     except Exception as err:
         return f"ERROR: An error occurred: {err}"
 
-@tool
 def getRawFile(ctx: Any, org:str, repo:str, branch:str, file_path:str):
     """Fetches the content of a file in raw format from a specified GitHub repository, branch, and file path.
     
@@ -83,7 +84,6 @@ def getRawFile(ctx: Any, org:str, repo:str, branch:str, file_path:str):
     except Exception as err:
         return f"ERROR: An error occurred: {err}"
 
-@tool
 def storeSpecFile(ctx: Any, file_name:str, file_content:str):
     """Stores the content of a file in the shared memory of the context.
     
@@ -92,6 +92,7 @@ def storeSpecFile(ctx: Any, file_name:str, file_content:str):
         file_content (str): The content of the file to be stored.
     """
     # Add the file name and content to the shared memory of the context
+    create_path_if_not_exists(result_path)
     with open(path.join(result_path, file_name), "w") as f:
         f.write(file_content)
     return f"Stored file '{file_name}"

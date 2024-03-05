@@ -17,9 +17,9 @@ import logging
 
 from .api_spec_agent.agent import RepoToSwagger
 from analysta_llm_agents.tools.context import Context
+from uuid import uuid4
 
-
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 
 # Task example:
 # Use repository spring-petclinic/spring-framework-petclinic with 
@@ -37,7 +37,7 @@ def git2swagger():
     args = git2swag.parse_args()
 
     print(f"\n\nTask: {args.task}\n\n")
-    for message in agent.start(args.task):
+    for message in agent.start(args.task, conversation_id=str(uuid4())):
         print(message)
         print("\n\n")
 
