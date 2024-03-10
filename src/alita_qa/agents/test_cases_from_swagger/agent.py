@@ -42,7 +42,7 @@ Copy code
 Feature: Owner Management
 
   Background: 
-    Given the PetClinic application is running
+    Given the ApplicationName application is running
 
   Scenario Outline: Create a new owner with valid data
     Given I have the following owner details
