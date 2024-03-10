@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alita_qa"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
   { name="Artem Rozumenko", email="artem_rozumenko@epam.com" },
 ]
@@ -22,9 +22,7 @@ dynamic = ["dependencies"]
 dependencies = {file = ["requirements.txt"]}
 
 [project.scripts]
-git2swagger = "alita_qa.agents.git2swag:git2swagger"
-swagger2gherkin = "alita_qa.agents.swag2gherkin:swag2gherkin"
-gherkin2testss = "alita_qa.agents.create_and_run_tests:gherkin2tests"
+git2swagger = "alita_qa.cli.git2swag:main"
 
 [project.urls]
 Homepage = "https://projectalita.ai"
