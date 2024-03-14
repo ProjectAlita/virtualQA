@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: Petclinic API
+  description: API documentation for Petclinic
+  version: '1.0'
+servers:
+  - url: https://petclinic.example.com
+paths:
+  /owners/{ownerId}/pets/new:
+    get:
+      summary: Initiate creation of a new pet
+      operationId: initPetCreationForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show pet creation form
+    post:
+      summary: Process creation of a new pet
+      operationId: processPetCreationForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '302':
+          description: Redirect to the owner's details page after pet creation
+  /owners/{ownerId}/pets/{petId}/edit:
+    get:
+      summary: Initiate update pet form
+      operationId: initUpdatePetForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show pet update form
+    post:
+      summary: Process update of a pet's information
+      operationId: processUpdatePetForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '302':
+          description: Redirect to the owner's details page after pet update
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/PetType'
+        owner:
+          $ref: '#/components/schemas/Owner'
+    PetType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Owner:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        telephone:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - address
+        - city
+        - telephone

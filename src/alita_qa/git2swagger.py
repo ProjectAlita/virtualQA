@@ -42,12 +42,12 @@ def main(task: str):
 
     prompt = llm.client.prompt(prompt_id=5, prompt_version_id=11)
 
-    llm = AzureChatOpenAI(
-        azure_endpoint=environ.get("DIAL_ENDPOINT"),
-        deployment_name="gpt-4-1106-preview",
-        openai_api_version="2023-03-15-preview",
-        openai_api_key=environ.get('DIAL_AUTH_TOKEN')
-    )
+    # llm = AzureChatOpenAI(
+    #     azure_endpoint=environ.get("DIAL_ENDPOINT"),
+    #     deployment_name="gpt-4-1106-preview",
+    #     openai_api_version="2023-03-15-preview",
+    #     openai_api_key=environ.get('DIAL_AUTH_TOKEN')
+    # )
     
     agent = create_mixed_agent(llm, tools, prompt)
 
@@ -56,3 +56,5 @@ def main(task: str):
         return_intermediate_steps=True)
 
     yield from agent_executor.stream({"input": task}, include_run_info=True)
+
+

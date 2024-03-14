@@ -44,7 +44,7 @@ def getFileContent(ctx: Any, file_path: str):
     """
     try:
         with open(file_path, "r") as f:
-            file_content = f.read()
+            file_content = f.read() 
         return file_content
     except Exception as e:
         return f"Error: {e}"

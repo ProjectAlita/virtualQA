@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Petclinic API
+  description: API documentation for Petclinic
+  version: '1.0'
+servers:
+  - url: https://petclinic.example.com
+paths:
+  /vets:
+    get:
+      summary: Show list of all vets
+      operationId: showVetList
+      responses:
+        '200':
+          description: An HTML page with a list of vets
+  /vets.json:
+    get:
+      summary: Show list of vets in JSON format
+      operationId: showJsonVetList
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A JSON list of vets
+  /vets.xml:
+    get:
+      summary: Show list of vets in XML format
+      operationId: showXmlVetList
+      produces:
+        - application/xml
+      responses:
+        '200':
+          description: An XML list of vets
+components:
+  schemas:
+    Vet:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        specialties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Specialty'
+    Specialty:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

@@ -13,13 +13,11 @@ class getRepoTreeSchema(BaseModel):
     branch: str = Field(default='main', description="The name of the branch to retrieve the tree structure from")
     recursive: str = Field(default='true', description="Whether to retrieve the tree structure recursively or not")
 
-
 class getRawFileSchema(BaseModel):
     org: str = Field(description="The name of the organization that owns the repository.")
     repo: str = Field(description="The name of the repository.")
     branch: str = Field(default='main', description="The name of the branch to retrieve the file from.")
     file_path: str = Field(description="The path of the file to retrieve.")
-
 
 class getGitPatchSchema(BaseModel):
     org: str = Field(description="The name of the organization that owns the repository.")
@@ -33,13 +31,16 @@ class getPullRequestChangesSchema(BaseModel):
 
 def _get_request(url: str, headers: Optional[dict] = None):
     try:
+        logger.info(f"URL: {url}")
         # Send the GET request to the GitHub API
-        response = requests.get(url, headers={"Content-Type": "application/json"})
+        response = requests.get(url)
         response.raise_for_status()
         return response
     except requests.exceptions.HTTPError as http_err:
+        logger.error(f"ERROR: HTTP error occurred: {http_err}")
         return f"ERROR: HTTP error occurred: {http_err}"
     except Exception as err:
+        logger.error(f"ERROR: An error occurred: {err}")
         return f"ERROR: An error occurred: {err}"
 
 @tool(args_schema=getRepoTreeSchema)
@@ -47,7 +48,6 @@ def getRepoTree(org: str, repo: str, branch: Optional[str] = 'main', recursive: 
     """This API is used to retrieve the tree structure of a repository on GitHub."""
     # Construct the API URL with the given parameters
     url = f"https://api.github.com/repos/{org}/{repo}/git/trees/{branch}?recursive={recursive}"
-    logger.info(f"URL: {url}")
     # Include the 'recursive' parameter in the query string if requested
     resp = _get_request(url).json()
     paths = "\n - ".join([item["path"] for item in resp["tree"]])

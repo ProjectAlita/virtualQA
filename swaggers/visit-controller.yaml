@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: Petclinic API
+  description: API documentation for Petclinic
+  version: '1.0'
+servers:
+  - url: https://petclinic.example.com
+paths:
+  /owners/*/pets/{petId}/visits/new:
+    get:
+      summary: Initiate creation of a new visit
+      operationId: initNewVisitForm
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show visit creation form
+    post:
+      summary: Process creation of a new visit
+      operationId: processNewVisitForm
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '302':
+          description: Redirect to the owner's details page after visit creation
+  /owners/*/pets/{petId}/visits:
+    get:
+      summary: Show visits for a pet
+      operationId: showVisits
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of visits for the specified pet
+components:
+  schemas:
+    Visit:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        pet:
+          $ref: '#/components/schemas/Pet'
+    Pet:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/PetType'
+        owner:
+          $ref: '#/components/schemas/Owner'
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Visit'
+    PetType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Owner:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        telephone:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - address
+        - city
+        - telephone
