@@ -3,8 +3,6 @@ from os import environ
 from dotenv import load_dotenv
 
 from alita_sdk.llms.alita import AlitaChatModel
-from alita_sdk.agents import create_mixed_agent
-from langchain.agents import  AgentExecutor
 from langchain_openai import AzureChatOpenAI
 from src.alita_qa.tools.git import getRawFile, getRepoTree
 from src.alita_qa.tools.file import storeFile
@@ -22,7 +20,7 @@ except:
 ## Minimal set of setting for AlitaChatModel
 settings = {
     "deployment": "https://eye.projectalita.ai",
-    "model": "gpt-4",
+    "model": "gpt-4-0125-preview",
     "api_key": environ.get("AUTH_TOKEN"),
     "project_id": environ.get("PROJECT_ID"),
     "integration_uid": environ.get("INTEGRATION_UID"),
@@ -38,34 +36,99 @@ coreds = llm.client.datasource(3)
 
 tools = [
     DatasourcePredict(name="PylonAnalyse", description="Alita runtime and plugin framework codebase summarization", datasource=pylonds),
+    DatasourceSearch(name="PylonSearch", description="Search Runtime Codebase", datasource=pylonds),
     DatasourcePredict(name="AuthAnalyse", description="Alita auth codebase summarization", datasource=authds),
     DatasourcePredict(name="CoreAnalyse", description="Alita core modules codebase summarization", datasource=coreds),
-    DatasourceSearch(name="PylonSearch", description="Search Runtime Codebase", datasource=pylonds),
     DatasourceSearch(name="AuthSearch", description="Search Auth Codebase", datasource=authds),
     DatasourceSearch(name="CoreSearch", description="Search Core Modules Codebase", datasource=coreds)
 ]
 
-
-
-# from langchain_core.utils.function_calling import convert_to_openai_function
-
-# openai_tools = [convert_to_openai_function(tool) for tool in tools]
-
-# print(openai_tools)
-
-prompt = llm.client.prompt(prompt_id=1, prompt_version_id=1)
-
-agent = create_mixed_agent(llm, tools, prompt)
-
-agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools,
-    verbose=True, handle_parsing_errors=True, max_execution_time=None,
-    return_intermediate_steps=True)
-
-# task = """Where is tools comming from, in case of `from tools import MinioClient` - what are the tools?"""
-
-# for message in agent_executor.stream({"input": task}, include_run_info=True):
-#     print(message)
-    
+openai_tools = [
+    {
+        'name': 'PylonAnalyse', 
+        'description': 'Alita runtime and plugin framework codebase summarization', 
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search and summarize results for Alita Pylon', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    }, 
+    {
+        'name': 'AuthAnalyse', 
+        'description': 'Alita auth codebase summarization', 
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search and summarize results for Alita Auth', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    },  
+    {
+        'name': 'CoreAnalyse', 
+        'description': 'Alita core modules codebase summarization', 
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search and summarize results for Alita Core', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    }, 
+    {
+        'name': 'PylonSearch', 
+        'description': 'Search Runtime Codebase',
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search within Alita Pylon', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    }, 
+    {
+        'name': 'AuthSearch', 
+        'description': 'Search Auth Codebase', 
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search within Alita Auth', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    }, 
+    {
+        'name': 'CoreSearch', 
+        'description': 'Search Core Modules Codebase', 
+        'parameters': {
+            'properties': {
+                'query': {
+                    'description': 'qurty to search within Alita Core Modules', 
+                    'type': 'string'
+                }
+            }, 
+            'required': ['query'], 
+            'type': 'object'
+        }
+    }
+]
     
 from langchain_community.callbacks.streamlit import (
     StreamlitCallbackHandler,
@@ -75,38 +138,46 @@ import streamlit as st
 st_callback = StreamlitCallbackHandler(st.container())
 
 import streamlit as st
-from langchain import hub
-from langchain.agents import AgentExecutor, create_react_agent, load_tools
 
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
+    
+    #
+    # This example is for langchain based agents. Obvious limitation - only gpt-4, mixtrail and other advanced models.
+    #
+    # assistant = llm.client.assistant(prompt_id=1, prompt_version_id=2, tools=tools, model_settings={}, client=llm)
+    # st.session_state.agent_executor = assistant.getAgentExecutor()
+    
+    
+    # This one is for openai based agents
+    client = AzureChatOpenAI(
+        api_key=environ.get("DIAL_AUTH_TOKEN"),
+        azure_endpoint=environ.get("DIAL_ENDPOINT"),
+        azure_deployment="gpt-4-0125-preview",
+        api_version="2023-12-01-preview"
+    )
+    assistant = llm.client.assistant(prompt_id=1, prompt_version_id=1, 
+                                     tools=tools, openai_tools=openai_tools, 
+                                     model_settings={}, client=client)
+    st.session_state.agent_executor = assistant.getOpenAIAgentExecutor()
+    
+
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-llm = AzureChatOpenAI(
-        azure_endpoint=environ.get("DIAL_ENDPOINT"),
-        deployment_name="gpt-4-1106-preview",
-        openai_api_version="2023-03-15-preview",
-        openai_api_key=environ.get('DIAL_AUTH_TOKEN')
-    )
-
-# from langchain_core.messages import HumanMessage, SystemMessage
-
-# print(llm.invoke([
-#     HumanMessage(content="What is the code for `from tools import MinioClient`?")
-#     ], functions=tools))
 
 if prompt := st.chat_input():
     st.chat_message("user").write(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
-        response = agent_executor.invoke(
-            {"input": prompt, "chat_history": st.session_state.messages}, {"callbacks": [st_callback]}
+        response = st.session_state.agent_executor.invoke(
+            {"content": prompt, "chat_history": st.session_state.messages}, {"callbacks": [st_callback]}
         )
         st.write(response["output"])
         
         st.session_state.messages.append({"role": "assistant", "content": response["output"]})
+    
